@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export default{
     
     methods: {
@@ -18,7 +20,6 @@ export default{
 
         // convert local date to server date
         convert_date(date){
-            
             var default_tz          = timezone_default; // server timezone
             
             if(typeof(date) == 'undefined' || date == null)
@@ -26,7 +27,7 @@ export default{
 
             if(moment(date,"dddd LL").isValid())
                 return moment(date, "dddd LL").tz(default_tz).format('YYYY-MM-DD');
-            return null;    
+            return null;     
         },
 
         // convert local time to server time
@@ -38,6 +39,7 @@ export default{
 
             if(moment(time).isValid())
                 return moment(time).tz(default_tz).format('HH:mm:ss');
+ 
                 
             return null;        
         },
@@ -55,7 +57,6 @@ export default{
                 return null;
             
             var local_tz          = Intl.DateTimeFormat().resolvedOptions().timeZone; // local timezone
-            
             return moment(date).tz(local_tz).format('YYYY-MM-DD');
         },
 
@@ -64,10 +65,8 @@ export default{
             var local_tz          = Intl.DateTimeFormat().resolvedOptions().timeZone; // local timezone
             if(typeof(date) == 'undefined' || date == null)
                 return null;
-            
             return moment(date).tz(local_tz).format(date_format.vue_date_format);
         },
-
         // convert server time to local time into moment object
         convert_time_to_local(date, time, format) {
             var local_tz     = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -89,7 +88,7 @@ export default{
             
             if(typeof(date) == 'undefined' || date == null)
                 return null;
-
+            
             date             = moment(date).format("YYYY-MM-DD")
             // return format
             if(typeof format !== "undefined")
@@ -138,20 +137,23 @@ export default{
 
         // convert single date to full date DD-MM-YYYY
         dateToFullDate(date, monthYear) {
+            
             return moment(moment(monthYear).format("YYYY-MM")+'-'+date).format("dddd LL")
+
         },
+
 
         dateToShortDate(date, monthYear) {
             return moment(moment(monthYear).format("YYYY-MM")+'-'+date).format(date_format.vue_date_format)
-        },
 
+        },
 
         // count months
         countMonth(dateStart, dateEnd) {
             var local_tz     = Intl.DateTimeFormat().resolvedOptions().timeZone; // local timezone
-     // convert dates to moment object
-            dateStart   = moment(dateStart).tz(local_tz);
-            dateEnd     = moment(dateEnd).tz(local_tz);
+            // convert dates to moment object
+            dateStart   = moment(dateStart);
+            dateEnd     = moment(dateEnd);
 
             
             var temp_months = [];
@@ -381,6 +383,14 @@ export default{
 
         },
 
+        userTimezone1(date = null, format = null){
+
+            var local_tz     = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            
+            return moment(date, format);
+
+        },
+
         //server timezone
         serverTimezone(date = null, format = null){
             
@@ -397,15 +407,7 @@ export default{
             
             return moment.tz(local_tz).zoneAbbr();
 
-        },
-
-        userTimezone1(date = null, format = null){
-
-            var local_tz     = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            
-            return moment(date, format);
-
-        },
+        }
 
     }
   }

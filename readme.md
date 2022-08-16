@@ -1,3 +1,3 @@
-# Eventmie Pro FullyLoaded
+# Eventmie Pro
 
-Please read the online documentation-- https://eventmie-pro-docs.classiebit.com/docs/1.7/fullyloaded/introduction
+Please read the online documentation- https://eventmie-pro-docs.classiebit.com

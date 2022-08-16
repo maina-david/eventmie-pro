@@ -1,1 +1,0 @@
-@extends('vendor.eventmie-pro.bookings.show')
