@@ -15,246 +15,246 @@ class SettingsTableSeeder extends Seeder
      */
     public function run()
     {
-        $setting=$this->findSetting("site.site_name");
+        $setting = $this->findSetting("site.site_name");
         if (!$setting->exists) {
-            $setting->fill(["display_name"=> "Site Name", "value"=> "Eventmie Pro", "details"=> null, "type"=> "text", "order"=> "1", "group"=> "Site", ])->save();
+            $setting->fill(["display_name" => "Site Name", "value" => "Eventmie Pro", "details" => null, "type" => "text", "order" => "1", "group" => "Site",])->save();
         }
 
-        $setting=$this->findSetting("site.site_slogan");
+        $setting = $this->findSetting("site.site_slogan");
         if (!$setting->exists) {
-            $setting->fill(["display_name"=> "Site Slogan", "value"=> "Host Events. Sell Tickets.", "details"=> null, "type"=> "text", "order"=> "2", "group"=> "Site", ])->save();
+            $setting->fill(["display_name" => "Site Slogan", "value" => "Host Events. Sell Tickets.", "details" => null, "type" => "text", "order" => "2", "group" => "Site",])->save();
         }
 
-        $setting=$this->findSetting("site.site_footer");
+        $setting = $this->findSetting("site.site_footer");
         if (!$setting->exists) {
-            $setting->fill(["display_name"=> "Extra Footer Credits", "value"=> "Eventmie Pro <strong>v1.7<strong>. Product by <a href='https://www.classiebit.com' target='_blank'>Classiebit</a>", "details"=> null, "type"=> "text", "order"=> "2", "group"=> "Site", ])->save();
+            $setting->fill(["display_name" => "Extra Footer Credits", "value" => "Eventmie Pro <strong>v1.7<strong>. Product by <a href='https://www.classiebit.com' target='_blank'>Classiebit</a>", "details" => null, "type" => "text", "order" => "2", "group" => "Site",])->save();
         }
 
-        $setting=$this->findSetting("site.logo");
+        $setting = $this->findSetting("site.logo");
         if (!$setting->exists) {
-            $setting->fill(["display_name"=> "Site Logo", "value"=> "settings/August2019/16q81BieqYZYajLI5zBU.png", "details"=> null, "type"=> "image", "order"=> "3", "group"=> "Site", ])->save();
+            $setting->fill(["display_name" => "Site Logo", "value" => "settings/August2019/16q81BieqYZYajLI5zBU.png", "details" => null, "type" => "image", "order" => "3", "group" => "Site",])->save();
         }
 
-        $setting=$this->findSetting("site.site_favicon");
+        $setting = $this->findSetting("site.site_favicon");
         if (!$setting->exists) {
-            $setting->fill(["display_name"=> "Site Favicon", "value"=> "settings/August2019/zHUD52Q2ZhZiephfkNxu.png", "details"=> null, "type"=> "image", "order"=> "4", "group"=> "Site", ])->save();
+            $setting->fill(["display_name" => "Site Favicon", "value" => "settings/August2019/zHUD52Q2ZhZiephfkNxu.png", "details" => null, "type" => "image", "order" => "4", "group" => "Site",])->save();
         }
 
-        $setting=$this->findSetting("seo.meta_title");
+        $setting = $this->findSetting("seo.meta_title");
         if (!$setting->exists) {
-            $setting->fill(["display_name"=> "Meta Title", "value"=> "Eventmie Pro", "details"=> null, "type"=> "text", "order"=> "5", "group"=> "SEO", ])->save();
+            $setting->fill(["display_name" => "Meta Title", "value" => "", "details" => null, "type" => "text", "order" => "5", "group" => "SEO",])->save();
         }
 
-        $setting=$this->findSetting("seo.meta_description");
+        $setting = $this->findSetting("seo.meta_description");
         if (!$setting->exists) {
-            $setting->fill(["display_name"=> "Meta Description", "value"=> "eventmie", "details"=> null, "type"=> "text", "order"=> "7", "group"=> "SEO", ])->save();
+            $setting->fill(["display_name" => "Meta Description", "value" => "", "details" => null, "type" => "text", "order" => "7", "group" => "SEO",])->save();
         }
 
-        $setting=$this->findSetting("social.facebook");
+        $setting = $this->findSetting("social.facebook");
         if (!$setting->exists) {
-            $setting->fill(["display_name"=> "Facebook Page Username", "value"=> "classiebitsoftwares", "details"=> null, "type"=> "text", "order"=> "8", "group"=> "Social", ])->save();
+            $setting->fill(["display_name" => "Facebook Page Username", "value" => "", "details" => null, "type" => "text", "order" => "8", "group" => "Social",])->save();
         }
 
-        $setting=$this->findSetting("social.twitter");
+        $setting = $this->findSetting("social.twitter");
         if (!$setting->exists) {
-            $setting->fill(["display_name"=> "Twitter Account Username", "value"=> "classiebit", "details"=> null, "type"=> "text", "order"=> "9", "group"=> "Social", ])->save();
+            $setting->fill(["display_name" => "Twitter Account Username", "value" => "", "details" => null, "type" => "text", "order" => "9", "group" => "Social",])->save();
         }
 
-        $setting=$this->findSetting("social.instagram");
+        $setting = $this->findSetting("social.instagram");
         if (!$setting->exists) {
-            $setting->fill(["display_name"=> "Instagram URL", "value"=> "https://www.instagram.com/classiebitofficial/", "details"=> null, "type"=> "text", "order"=> "10", "group"=> "Social", ])->save();
+            $setting->fill(["display_name" => "Instagram URL", "value" => "", "details" => null, "type" => "text", "order" => "10", "group" => "Social",])->save();
         }
 
-        $setting=$this->findSetting("social.linkedin");
+        $setting = $this->findSetting("social.linkedin");
         if (!$setting->exists) {
-            $setting->fill(["display_name"=> "Linkedin URL", "value"=> "https://www.linkedin.com/company/classiebit/", "details"=> null, "type"=> "text", "order"=> "11", "group"=> "Social", ])->save();
+            $setting->fill(["display_name" => "Linkedin URL", "value" => "", "details" => null, "type" => "text", "order" => "11", "group" => "Social",])->save();
         }
 
-        $setting=$this->findSetting("contact.address");
+        $setting = $this->findSetting("contact.address");
         if (!$setting->exists) {
-            $setting->fill(["display_name"=> "Address", "value"=> "85 Golden Street, Darlinghurst ERP 2019, United States", "details"=> null, "type"=> "text_area", "order"=> "12", "group"=> "Contact", ])->save();
+            $setting->fill(["display_name" => "Address", "value" => "85 Golden Street, Darlinghurst ERP 2019, United States", "details" => null, "type" => "text_area", "order" => "12", "group" => "Contact",])->save();
         }
 
-        $setting=$this->findSetting("contact.phone");
+        $setting = $this->findSetting("contact.phone");
         if (!$setting->exists) {
-            $setting->fill(["display_name"=> "Phone", "value"=> "1800-180-0808", "details"=> null, "type"=> "text", "order"=> "13", "group"=> "Contact", ])->save();
+            $setting->fill(["display_name" => "Phone", "value" => "1800-180-0808", "details" => null, "type" => "text", "order" => "13", "group" => "Contact",])->save();
         }
 
-        $setting=$this->findSetting("contact.email");
+        $setting = $this->findSetting("contact.email");
         if (!$setting->exists) {
-            $setting->fill(["display_name"=> "Email", "value"=> "info@eventmie.com", "details"=> null, "type"=> "text", "order"=> "14", "group"=> "Contact", ])->save();
+            $setting->fill(["display_name" => "Email", "value" => "info@eventmie.com", "details" => null, "type" => "text", "order" => "14", "group" => "Contact",])->save();
         }
 
-        $setting=$this->findSetting("contact.google_map_lat");
+        $setting = $this->findSetting("contact.google_map_lat");
         if (!$setting->exists) {
-            $setting->fill(["display_name"=> "Google Map Lat", "value"=> "", "details"=> null, "type"=> "text", "order"=> "15", "group"=> "Contact", ])->save();
+            $setting->fill(["display_name" => "Google Map Lat", "value" => "", "details" => null, "type" => "text", "order" => "15", "group" => "Contact",])->save();
         }
 
-        $setting=$this->findSetting("contact.google_map_long");
+        $setting = $this->findSetting("contact.google_map_long");
         if (!$setting->exists) {
-            $setting->fill(["display_name"=> "Google Map Long", "value"=> "", "details"=> null, "type"=> "text", "order"=> "16", "group"=> "Contact", ])->save();
+            $setting->fill(["display_name" => "Google Map Long", "value" => "", "details" => null, "type" => "text", "order" => "16", "group" => "Contact",])->save();
         }
 
-        $setting=$this->findSetting("booking.pre_booking_time");
+        $setting = $this->findSetting("booking.pre_booking_time");
         if (!$setting->exists) {
-            $setting->fill(["display_name"=> "Pre Booking Time (hours)", "value"=> "2", "details"=> null, "type"=> "text", "order"=> "17", "group"=> "Booking", ])->save();
+            $setting->fill(["display_name" => "Pre Booking Time (hours)", "value" => "2", "details" => null, "type" => "text", "order" => "17", "group" => "Booking",])->save();
         }
 
-        $setting=$this->findSetting("booking.pre_cancellation_time");
+        $setting = $this->findSetting("booking.pre_cancellation_time");
         if (!$setting->exists) {
-            $setting->fill(["display_name"=> "Pre Cancellation Time (hours)", "value"=> "1", "details"=> null, "type"=> "text", "order"=> "18", "group"=> "Booking", ])->save();
+            $setting->fill(["display_name" => "Pre Cancellation Time (hours)", "value" => "1", "details" => null, "type" => "text", "order" => "18", "group" => "Booking",])->save();
         }
 
-        $setting=$this->findSetting("booking.max_ticket_qty");
+        $setting = $this->findSetting("booking.max_ticket_qty");
         if (!$setting->exists) {
             $setting->fill([
-                "display_name"=> "Max Ticket Qty Limit Per Order", 
-                "value"=> "5", 
+                "display_name" => "Max Ticket Qty Limit Per Order",
+                "value" => "5",
                 "details" => json_encode([
                     "description" => "Set Max ticket quantity limit to be purchased in single order. WARNING: keep it under 100",
-                ]), 
-                "type"=> "text", 
-                "order"=> "19", 
-                "group"=> "Booking", 
+                ]),
+                "type" => "text",
+                "order" => "19",
+                "group" => "Booking",
             ])->save();
         }
 
         $setting = $this->findSetting("booking.hide_expire_events");
         if (!$setting->exists) {
             $setting->fill([
-                "display_name" => "Hide Expired Events", 
-                "value" => "0", 
+                "display_name" => "Hide Expired Events",
+                "value" => "0",
                 "details" => json_encode([
                     "validation" => [
                         "rule" => "in:0,1,on,off"
                     ]
-                ]), 
-                "type" => "checkbox", 
-                "order" => "20", 
-                "group" => "Booking", 
+                ]),
+                "type" => "checkbox",
+                "order" => "20",
+                "group" => "Booking",
             ])->save();
         }
 
         $setting = $this->findSetting("booking.offline_payment_organizer");
         if (!$setting->exists) {
             $setting->fill([
-                "display_name" => "Allow Offline Payment For Organizer", 
-                "value" => "0", 
+                "display_name" => "Allow Offline Payment For Organizer",
+                "value" => "0",
                 "details" => json_encode([
                     "validation" => [
                         "rule" => "in:0,1,on,off"
                     ]
-                ]), 
-                "type" => "checkbox", 
-                "order" => "21", 
-                "group" => "Booking", 
+                ]),
+                "type" => "checkbox",
+                "order" => "21",
+                "group" => "Booking",
             ])->save();
         }
 
         $setting = $this->findSetting("booking.offline_payment_customer");
         if (!$setting->exists) {
             $setting->fill([
-                "display_name" => "Allow Offline Payment For Customer", 
-                "value" => "0", 
+                "display_name" => "Allow Offline Payment For Customer",
+                "value" => "0",
                 "details" => json_encode([
                     "validation" => [
                         "rule" => "in:0,1,on,off"
                     ]
-                ]), 
-                "type" => "checkbox", 
-                "order" => "22", 
-                "group" => "Booking", 
+                ]),
+                "type" => "checkbox",
+                "order" => "22",
+                "group" => "Booking",
             ])->save();
         }
 
-        
+
 
         $setting = $this->findSetting("multi-vendor.multi_vendor");
         if (!$setting->exists) {
             $setting->fill([
-                "display_name" => "Multi Organisation/Vendor Mode", 
-                "value" => "1", 
+                "display_name" => "Multi Organisation/Vendor Mode",
+                "value" => "1",
                 "details" => json_encode([
                     "validation" => [
                         "rule" => "in:0,1,on,off"
                     ]
-                ]), 
-                "type" => "checkbox", 
-                "order" => "21", 
-                "group" => "Multi-vendor", 
+                ]),
+                "type" => "checkbox",
+                "order" => "21",
+                "group" => "Multi-vendor",
             ])->save();
         }
 
         $setting = $this->findSetting("multi-vendor.admin_commission");
         if (!$setting->exists) {
             $setting->fill([
-                "display_name" => "Admin Commission % (add positive integer value only e.g 5)", 
-                "value" => "5", 
-                "details"=> null, 
-                "type" => "text", 
-                "order" => "22", 
-                "group" => "Multi-vendor", 
+                "display_name" => "Admin Commission % (add positive integer value only e.g 5)",
+                "value" => "5",
+                "details" => null,
+                "type" => "text",
+                "order" => "22",
+                "group" => "Multi-vendor",
             ])->save();
         }
 
         $setting = $this->findSetting("admin.bg_image");
         if (!$setting->exists) {
-            $setting->fill(["display_name" => "Admin Background Image", "value" => "settings/August2019/1eGBkULS8ZGkR9Kntzps.jpg", "details"=> null, "type" => "image", "order" => "23", "group" => "Admin", ])->save();
+            $setting->fill(["display_name" => "Admin Background Image", "value" => "settings/August2019/1eGBkULS8ZGkR9Kntzps.jpg", "details" => null, "type" => "image", "order" => "23", "group" => "Admin",])->save();
         }
 
         $setting = $this->findSetting("admin.title");
         if (!$setting->exists) {
-            $setting->fill(["display_name" => "Admin Title", "value" => "Eventmie Pro", "details"=> null, "type" => "text", "order" => "24", "group" => "Admin", ])->save();
+            $setting->fill(["display_name" => "Admin Title", "value" => "Eventmie Pro", "details" => null, "type" => "text", "order" => "24", "group" => "Admin",])->save();
         }
 
         $setting = $this->findSetting("admin.description");
         if (!$setting->exists) {
-            $setting->fill(["display_name" => "Admin Description", "value" => "Eventmie Pro Admin Panel", "details"=> null, "type" => "text", "order" => "25", "group" => "Admin", ])->save();
+            $setting->fill(["display_name" => "Admin Description", "value" => "Eventmie Pro Admin Panel", "details" => null, "type" => "text", "order" => "25", "group" => "Admin",])->save();
         }
 
         $setting = $this->findSetting("admin.loader");
         if (!$setting->exists) {
-            $setting->fill(["display_name" => "Admin Loader", "value" => "", "details"=> null, "type" => "image", "order" => "26", "group" => "Admin", ])->save();
+            $setting->fill(["display_name" => "Admin Loader", "value" => "", "details" => null, "type" => "image", "order" => "26", "group" => "Admin",])->save();
         }
 
         $setting = $this->findSetting("admin.icon_image");
         if (!$setting->exists) {
-            $setting->fill(["display_name" => "Admin Icon Image", "value" => "settings/August2019/Lcp6sngWhfOz3sPRLKLx.png", "details"=> null, "type" => "image", "order" => "27", "group" => "Admin", ])->save();
+            $setting->fill(["display_name" => "Admin Icon Image", "value" => "settings/August2019/Lcp6sngWhfOz3sPRLKLx.png", "details" => null, "type" => "image", "order" => "27", "group" => "Admin",])->save();
         }
 
         $setting = $this->findSetting("apps.google_client_id");
         if (!$setting->exists) {
-            $setting->fill(["display_name" => "Google Client ID", "value" => "", "details"=> null, "type" => "text", "order" => "28", "group" => "Apps", ])->save();
+            $setting->fill(["display_name" => "Google Client ID", "value" => "", "details" => null, "type" => "text", "order" => "28", "group" => "Apps",])->save();
         }
 
         $setting = $this->findSetting("apps.google_client_secret");
         if (!$setting->exists) {
-            $setting->fill(["display_name" => "Google Client Secret", "value" => "", "details"=> null, "type" => "text", "order" => "29", "group" => "Apps", ])->save();
+            $setting->fill(["display_name" => "Google Client Secret", "value" => "", "details" => null, "type" => "text", "order" => "29", "group" => "Apps",])->save();
         }
 
         $setting = $this->findSetting("apps.google_map_key");
         if (!$setting->exists) {
-            $setting->fill(["display_name" => "Google Map Key", "value" => "", "details"=> null, "type" => "text", "order" => "30", "group" => "Apps", ])->save();
+            $setting->fill(["display_name" => "Google Map Key", "value" => "", "details" => null, "type" => "text", "order" => "30", "group" => "Apps",])->save();
         }
 
         $setting = $this->findSetting("apps.facebook_app_id");
         if (!$setting->exists) {
-            $setting->fill(["display_name" => "Facebook App Id", "value" => "", "details"=> null, "type" => "text", "order" => "31", "group" => "Apps", ])->save();
+            $setting->fill(["display_name" => "Facebook App Id", "value" => "", "details" => null, "type" => "text", "order" => "31", "group" => "Apps",])->save();
         }
 
         $setting = $this->findSetting("apps.facebook_app_secret");
         if (!$setting->exists) {
-            $setting->fill(["display_name" => "Facebook App Secret", "value" => "", "details"=> null, "type" => "text", "order" => "32", "group" => "Apps", ])->save();
+            $setting->fill(["display_name" => "Facebook App Secret", "value" => "", "details" => null, "type" => "text", "order" => "32", "group" => "Apps",])->save();
         }
 
         $setting = $this->findSetting("apps.paypal_client_id");
         if (!$setting->exists) {
-            $setting->fill(["display_name" => "PayPal Client Id", "value" => "", "details"=> null, "type" => "text", "order" => "33", "group" => "Apps", ])->save();
+            $setting->fill(["display_name" => "PayPal Client Id", "value" => "", "details" => null, "type" => "text", "order" => "33", "group" => "Apps",])->save();
         }
 
         $setting = $this->findSetting("apps.paypal_secret");
         if (!$setting->exists) {
-            $setting->fill(["display_name" => "PayPal Secret", "value" => "", "details"=> null, "type" => "text", "order" => "34", "group" => "Apps", ])->save();
+            $setting->fill(["display_name" => "PayPal Secret", "value" => "", "details" => null, "type" => "text", "order" => "34", "group" => "Apps",])->save();
         }
 
         $setting = $this->findSetting("apps.paypal_mode");
@@ -263,32 +263,32 @@ class SettingsTableSeeder extends Seeder
                 "validation" => [
                     "rule" => "in:0,1,on,off"
                 ]
-            ]), "type" => "checkbox", "order" => "35", "group" => "Apps", ])->save();
+            ]), "type" => "checkbox", "order" => "35", "group" => "Apps",])->save();
         }
 
         $setting = $this->findSetting("mail.mail_driver");
         if (!$setting->exists) {
-            $setting->fill(["display_name" => "Mail Driver", "value" => "", "details"=> null, "type" => "text", "order" => "36", "group" => "Mail", ])->save();
+            $setting->fill(["display_name" => "Mail Driver", "value" => "", "details" => null, "type" => "text", "order" => "36", "group" => "Mail",])->save();
         }
 
         $setting = $this->findSetting("mail.mail_host");
         if (!$setting->exists) {
-            $setting->fill(["display_name" => "Mail Host", "value" => "", "details"=> null, "type" => "text", "order" => "37", "group" => "Mail", ])->save();
+            $setting->fill(["display_name" => "Mail Host", "value" => "", "details" => null, "type" => "text", "order" => "37", "group" => "Mail",])->save();
         }
 
         $setting = $this->findSetting("mail.mail_port");
         if (!$setting->exists) {
-            $setting->fill(["display_name" => "Mail Port", "value" => "", "details"=> null, "type" => "text", "order" => "38", "group" => "Mail", ])->save();
+            $setting->fill(["display_name" => "Mail Port", "value" => "", "details" => null, "type" => "text", "order" => "38", "group" => "Mail",])->save();
         }
 
         $setting = $this->findSetting("mail.mail_username");
         if (!$setting->exists) {
-            $setting->fill(["display_name" => "Mail Username", "value" => "", "details"=> null, "type" => "text", "order" => "39", "group" => "Mail", ])->save();
+            $setting->fill(["display_name" => "Mail Username", "value" => "", "details" => null, "type" => "text", "order" => "39", "group" => "Mail",])->save();
         }
 
         $setting = $this->findSetting("mail.mail_password");
         if (!$setting->exists) {
-            $setting->fill(["display_name" => "Mail Password", "value" => "", "details"=> null, "type" => "password", "order" => "40", "group" => "Mail", ])->save();
+            $setting->fill(["display_name" => "Mail Password", "value" => "", "details" => null, "type" => "password", "order" => "40", "group" => "Mail",])->save();
         }
 
         $setting = $this->findSetting("mail.mail_encryption");
@@ -300,19 +300,19 @@ class SettingsTableSeeder extends Seeder
                     "SSL" => "SSL",
                     "TLS" => "TLS"
                 ]
-            ]), "type" => "select_dropdown", "order" => "41", "group" => "Mail", ])->save();
+            ]), "type" => "select_dropdown", "order" => "41", "group" => "Mail",])->save();
         }
 
         $setting = $this->findSetting("mail.mail_sender_email");
         if (!$setting->exists) {
-            $setting->fill(["display_name" => "Mail Sender Email", "value" => "eventmie@classiebit.com", "details"=> null, "type" => "text", "order" => "42", "group" => "Mail", ])->save();
+            $setting->fill(["display_name" => "Mail Sender Email", "value" => "", "details" => null, "type" => "text", "order" => "42", "group" => "Mail",])->save();
         }
 
         $setting = $this->findSetting("mail.mail_sender_name");
         if (!$setting->exists) {
-            $setting->fill(["display_name" => "Mail Sender Name", "value" => "Eventmie Pro", "details"=> null, "type" => "text", "order" => "43", "group" => "Mail", ])->save();
+            $setting->fill(["display_name" => "Mail Sender Name", "value" => "", "details" => null, "type" => "text", "order" => "43", "group" => "Mail",])->save();
         }
-        
+
         $setting = $this->findSetting("regional.timezone_default");
         if (!$setting->exists) {
             $setting->fill(["display_name" => "Timezone", "value" => "Asia/Kolkata", "details" => json_encode([
@@ -667,34 +667,34 @@ class SettingsTableSeeder extends Seeder
                     "Pacific/Wake" => "Pacific/Wake",
                     "Pacific/Wallis" => "Pacific/Wallis"
                 ]
-            ]), "type" => "select_dropdown", "order" => "44", "group" => "Regional", ])->save();
+            ]), "type" => "select_dropdown", "order" => "44", "group" => "Regional",])->save();
         }
 
         $setting = $this->findSetting("regional.currency_default");
         if (!$setting->exists) {
             $setting->fill([
-                "display_name" => "Currency", 
-                "value" => "USD", 
-                "type" => "text", 
-                "order" => "45", 
-                "group" => "Regional", 
+                "display_name" => "Currency",
+                "value" => "USD",
+                "type" => "text",
+                "order" => "45",
+                "group" => "Regional",
                 "details" => json_encode([
                     "validation" => [
                         "rule" => "required"
                     ],
-                    "description" => "Add currency shortcode only e.g USD/EUR/GBP, etc. DO NOT ADD CURRENCY ICON." 
+                    "description" => "Add currency shortcode only e.g USD/EUR/GBP, etc. DO NOT ADD CURRENCY ICON."
                 ])
             ])->save();
         }
 
         $setting = $this->findSetting("seo.meta_keywords");
         if (!$setting->exists) {
-            $setting->fill(["display_name" => "Meta Keywords (optional)", "value" => "", "details"=> null, "type" => "text", "order" => "46", "group" => "SEO", ])->save();
+            $setting->fill(["display_name" => "Meta Keywords (optional)", "value" => "", "details" => null, "type" => "text", "order" => "46", "group" => "SEO",])->save();
         }
 
         $setting = $this->findSetting("apps.google_analytics_code");
         if (!$setting->exists) {
-            $setting->fill(["display_name" => "Google Analytics ID", "value" => "", "details"=> null, "type" => "text", "order" => "31", "group" => "Apps", ])->save();
+            $setting->fill(["display_name" => "Google Analytics ID", "value" => "", "details" => null, "type" => "text", "order" => "31", "group" => "Apps",])->save();
         }
 
         $setting = $this->findSetting("multi-vendor.verify_email");
@@ -705,7 +705,7 @@ class SettingsTableSeeder extends Seeder
                     "Disabled",
                     "Enabled"
                 ]
-            ]), "type" => "select_dropdown", "order" => "48", "group" => "Multi-vendor", ])->save();
+            ]), "type" => "select_dropdown", "order" => "48", "group" => "Multi-vendor",])->save();
         }
 
         $setting = $this->findSetting("multi-vendor.verify_publish");
@@ -716,7 +716,7 @@ class SettingsTableSeeder extends Seeder
                     "Disabled",
                     "Enabled"
                 ]
-            ]), "type" => "select_dropdown", "order" => "49", "group" => "Multi-vendor", ])->save();
+            ]), "type" => "select_dropdown", "order" => "49", "group" => "Multi-vendor",])->save();
         }
 
         /* v1.6 */
@@ -728,9 +728,9 @@ class SettingsTableSeeder extends Seeder
                     "Disabled",
                     "Enabled"
                 ]
-            ]), "type" => "select_dropdown", "order" => "50", "group" => "Multi-vendor", ])->save();
+            ]), "type" => "select_dropdown", "order" => "50", "group" => "Multi-vendor",])->save();
         }
-        
+
         $setting = $this->findSetting("booking.disable_booking_cancellation");
         if (!$setting->exists) {
             $setting->fill(["display_name" => "Disable Booking Cancellation For Customers", "value" => "0", "details" => json_encode([
@@ -739,7 +739,7 @@ class SettingsTableSeeder extends Seeder
                     "No",
                     "Yes"
                 ]
-            ]), "type" => "select_dropdown", "order" => "50", "group" => "Booking", ])->save();
+            ]), "type" => "select_dropdown", "order" => "50", "group" => "Booking",])->save();
         }
 
         $setting = $this->findSetting("booking.hide_ticket_download");
@@ -750,9 +750,9 @@ class SettingsTableSeeder extends Seeder
                     "No",
                     "Yes"
                 ]
-            ]), "type" => "select_dropdown", "order" => "51", "group" => "Booking", ])->save();
+            ]), "type" => "select_dropdown", "order" => "51", "group" => "Booking",])->save();
         }
-        
+
         $setting = $this->findSetting("booking.hide_google_calendar");
         if (!$setting->exists) {
             $setting->fill(["display_name" => "Disable Google Calendar For Customers", "value" => "0", "details" => json_encode([
@@ -761,43 +761,43 @@ class SettingsTableSeeder extends Seeder
                     "No",
                     "Yes"
                 ]
-            ]), "type" => "select_dropdown", "order" => "51", "group" => "Booking", ])->save();
+            ]), "type" => "select_dropdown", "order" => "51", "group" => "Booking",])->save();
         }
 
         $setting = $this->findSetting("regional.date_format");
         if (!$setting->exists) {
             $setting->fill(["display_name" => "Date Format", "value" => "d M Y::DD MMM YYYY", "details" => json_encode([
-            "default" => "",
-            "options" => [
-                "d M Y::DD MMM YYYY" => "D M Y (e.g 08 Mar 2021)",
-                "d/M/Y::DD/MMM/YYYY" => "D/M/Y (e.g 08/Mar/2021)",
-                "d-M-Y::DD-MMM-YYYY" => "D-M-Y (e.g 08-Mar-2021)",
-                "d.M.Y::DD.MMM.YYYY" => "D.M.Y (e.g 08.Mar.2021)",
-                
-                "Y M d::YYYY MMM DD" => "Y M D (e.g 2021 Mar 08)",
-                "Y/M/d::YYYY/MMM/DD" => "Y/M/D (e.g 2021/Mar/08)",
-                "Y-M-d::YYYY-MMM-DD" => "Y-M-D (e.g 2021-Mar-08)",
-                "Y.M.d::YYYY.MMM.DD" => "Y.M.D (e.g 2021.Mar.08)",
-                
-                "M d Y::MMM DD YYYY" => "M D Y (e.g Mar 08 2021)",
-                "M/d/Y::MMM/DD/YYYY" => "M/D/Y (e.g Mar/08/2021)",
-                "M-d-Y::MMM-DD-YYYY" => "M-D-Y (e.g Mar-08-2021)",
-                "M.d.Y::MMM.DD.YYYY" => "M.D.Y (e.g Mar.08.2021)",
-            ]
-            ]), "type" => "select_dropdown", "order" => "45", "group" => "Regional", ])->save();
+                "default" => "",
+                "options" => [
+                    "d M Y::DD MMM YYYY" => "D M Y (e.g 08 Mar 2021)",
+                    "d/M/Y::DD/MMM/YYYY" => "D/M/Y (e.g 08/Mar/2021)",
+                    "d-M-Y::DD-MMM-YYYY" => "D-M-Y (e.g 08-Mar-2021)",
+                    "d.M.Y::DD.MMM.YYYY" => "D.M.Y (e.g 08.Mar.2021)",
+
+                    "Y M d::YYYY MMM DD" => "Y M D (e.g 2021 Mar 08)",
+                    "Y/M/d::YYYY/MMM/DD" => "Y/M/D (e.g 2021/Mar/08)",
+                    "Y-M-d::YYYY-MMM-DD" => "Y-M-D (e.g 2021-Mar-08)",
+                    "Y.M.d::YYYY.MMM.DD" => "Y.M.D (e.g 2021.Mar.08)",
+
+                    "M d Y::MMM DD YYYY" => "M D Y (e.g Mar 08 2021)",
+                    "M/d/Y::MMM/DD/YYYY" => "M/D/Y (e.g Mar/08/2021)",
+                    "M-d-Y::MMM-DD-YYYY" => "M-D-Y (e.g Mar-08-2021)",
+                    "M.d.Y::MMM.DD.YYYY" => "M.D.Y (e.g Mar.08.2021)",
+                ]
+            ]), "type" => "select_dropdown", "order" => "45", "group" => "Regional",])->save();
         }
-        
+
         $setting = $this->findSetting("regional.time_format");
         if (!$setting->exists) {
             $setting->fill(["display_name" => "Time Format", "value" => "12", "details" => json_encode([
-            "default" => "",
-            "options" => [
-                "12" => "12 Hours",
-                "24" => "24 Hours",
+                "default" => "",
+                "options" => [
+                    "12" => "12 Hours",
+                    "24" => "24 Hours",
                 ]
-            ]), "type" => "select_dropdown", "order" => "46", "group" => "Regional", ])->save();
+            ]), "type" => "select_dropdown", "order" => "46", "group" => "Regional",])->save();
         }
-        
+
     }
 
     /**
