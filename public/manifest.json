@@ -1,9 +1,9 @@
 {
-    "name": "Eventmie Pro FullyLoaded",
-    "short_name": "EPF",
+    "name": "Ticket Baze",
+    "short_name": "TB",
     "start_url": "/index.php",
     "background_color": "#00192f",
-    "description": "Run your own Events business with Eventmie Pro. Use it as event ticket selling website or event management platform on your own domain.",
+    "description": "Run your own Events business. Use it as event ticket selling website or event management platform on your own domain.",
     "display": "fullscreen",
     "theme_color": "#1b89ef",
     "icons": [
