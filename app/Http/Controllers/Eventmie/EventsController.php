@@ -326,6 +326,9 @@ class EventsController extends BaseEventsController
 
             if (!empty(setting('apps.paystack_public_key')) && !empty(setting('apps.paystack_secret_key')) && !empty(setting('apps.paystack_merchant_email')))
                 $default_payment_method     = 6;
+
+            if (!empty(setting('apps.tinypesa_apikey')))
+                $default_payment_method     = 7;
         }
 
         return $default_payment_method;

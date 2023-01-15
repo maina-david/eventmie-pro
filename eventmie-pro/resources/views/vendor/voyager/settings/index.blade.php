@@ -304,7 +304,7 @@
                         <br>
                         <div class="alert alert-info">
                             Set Callback URL on your TinyPesa Dashboard -
-                            <code>{{ route('eventmie.bookings_tinypesa_callback') }}</code>
+                            <code>{{ route('tinypesa_callback') }}</code>
                         </div>
                         @endif
 
