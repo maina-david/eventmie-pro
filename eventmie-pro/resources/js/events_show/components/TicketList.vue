@@ -745,16 +745,16 @@
                                             id="payment_method_paypal"
                                             name="payment_method"
                                             v-model="payment_method"
-                                            value="2"
+                                            value="7"
                                         />
                                         <label
                                             class="custom-control-label"
                                             for="payment_method_tinypesa"
                                         >
                                             &nbsp;<i
-                                                class="fab fa-sim-card"
+                                                class="fa fa-sim-card"
                                             ></i>
-                                            Mpesa</label
+                                            M-Pesa</label
                                         >
                                     </div>
 

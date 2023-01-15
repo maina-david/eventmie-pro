@@ -2176,10 +2176,8 @@
                                             class="custom-control-label"
                                             for="payment_method_tinypesa"
                                         >
-                                            &nbsp;<i
-                                                class="fab fa-sim-card"
-                                            ></i>
-                                            M-pesa</label
+                                            &nbsp;<i class="fa fa-sim-card"></i>
+                                            M-Pesa</label
                                         >
                                     </div>
 
