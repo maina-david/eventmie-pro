@@ -22,11 +22,11 @@ class MyEventsController extends BaseMyEventsController
     public function __construct()
     {
         parent::__construct();
-        
+
         // CUSTOM
         $this->event      = new Event;
         // CUSTOM
-    
+
     }
 
     // only organiser can see own events and admin or customer can't see organiser events 
@@ -35,25 +35,25 @@ class MyEventsController extends BaseMyEventsController
     {
         // get prifex from eventmie config
         $path = false;
-        if(!empty(config('eventmie.route.prefix')))
+        if (!empty(config('eventmie.route.prefix')))
             $path = config('eventmie.route.prefix');
         // admin can't see organiser bookings
         // if(Auth::user()->hasRole('admin'))
         // {
         //     return redirect()->route('voyager.events.index');   
         // }
-        
+
         //CUSTOM
         $is_admin   = Auth::user()->hasRole('admin') ? 1 : 0;
         //CUSTOM
-     
+
         // organizer 
         $organizer_id = Auth::id();
 
         return view($view, compact('path', 'organizer_id', 'extra', 'is_admin'));
 
         //CUSTOM    
-        
+
     }
 
     /**
@@ -64,10 +64,9 @@ class MyEventsController extends BaseMyEventsController
     public function form($slug = null, $view = 'vendor.eventmie-pro.events.form', $extra = [])
     {
         $event  = [];
-        
+
         // get event by event_slug
-        if($slug)
-        {
+        if ($slug) {
             $event  = $this->event->get_event($slug);
             $event  = $event->makeVisible('online_location');
 
@@ -75,32 +74,30 @@ class MyEventsController extends BaseMyEventsController
             $event  = $event->makeVisible('youtube_embed');
             $event  = $event->makeVisible('vimeo_embed');
             /* CUSTOM */
-            
+
             // user can't edit other user event but only admin can edit event's other users
-            if(!Auth::user()->hasRole('admin') && Auth::id() != $event->user_id)
+            if (!Auth::user()->hasRole('admin') && Auth::id() != $event->user_id)
                 return redirect()->route('eventmie.events_index');
         }
-    
+
         $organisers = [];
         // fetch organisers dropdown
         // only if login user is admin
-        if(Auth::user()->hasRole('admin'))
-        {
+        if (Auth::user()->hasRole('admin')) {
             // fetch organisers
             $organisers    = $this->event->get_organizers(null);
-            foreach($organisers as $key => $val)
-                $organisers[$key]->name = $val->name.'  ( '.$val->email.' )';
+            foreach ($organisers as $key => $val)
+                $organisers[$key]->name = $val->name . '  ( ' . $val->email . ' )';
 
-            if($slug)
-            {
+            if ($slug) {
                 // in case of edit event, organiser_id won't change
-                $this->organiser_id = $event->user_id;    
+                $this->organiser_id = $event->user_id;
             }
         }
-        
+
         $organiser_id             = $this->organiser_id ? $this->organiser_id : 0;
         $selected_organiser       = User::find($this->organiser_id);
-        
+
         return Eventmie::view($view, compact('event', 'organisers', 'organiser_id', 'extra', 'selected_organiser'));
     }
 
@@ -109,7 +106,7 @@ class MyEventsController extends BaseMyEventsController
     {
         // if logged in user is admin
         $this->is_admin($request);
-        
+
         // 1. validate data
         $request->validate([
             'title'             => 'required|max:256',
@@ -125,10 +122,10 @@ class MyEventsController extends BaseMyEventsController
             'show_reviews'      => 'nullable'
             // CUSTOM
         ], [
-            'category_id.*' => __('eventmie-pro::em.category').' '.__('eventmie-pro::em.required')
+            'category_id.*' => __('eventmie-pro::em.category') . ' ' . __('eventmie-pro::em.required')
         ]);
 
-        
+
         $result             = (object) [];
         $result->title      = null;
         $result->excerpt    = null;
@@ -136,41 +133,36 @@ class MyEventsController extends BaseMyEventsController
         //CUSTOM
         $result->short_url  = null;
         //CUSTOM
-        
+
         // in case of edit
-        if(!empty($request->event_id))
-        {
+        if (!empty($request->event_id)) {
             $request->validate([
                 'event_id'       => 'required|numeric|min:1|regex:^[1-9][0-9]*$^',
             ]);
 
             // check this event id have login user relationship
             $result      = (object) $this->event->get_user_event($request->event_id, $this->organiser_id);
-        
-            if(empty($result))
-                return error('access denied', Response::HTTP_BAD_REQUEST );
-    
+
+            if (empty($result))
+                return error('access denied', Response::HTTP_BAD_REQUEST);
         }
-        
+
         // title is not equal to before title then apply unique column rule    
-        if($result->title != $request->title)
-        {
+        if ($result->title != $request->title) {
             $request->validate([
                 'title'             => 'unique:events,title',
             ]);
         }
-        
+
         // slug is not equal to before slug then apply unique column rule    
-        if($result->slug != $request->slug)
-        {
+        if ($result->slug != $request->slug) {
             $request->validate([
                 'slug'             => 'unique:events,slug',
             ]);
         }
-          //CUSTOM
+        //CUSTOM
         // short_url is not equal to before short_url then apply unique column rule    
-        if($result->short_url != $request->short_url && !empty($request->short_url))
-        {
+        if ($result->short_url != $request->short_url && !empty($request->short_url)) {
             $request->validate([
                 'short_url'             => 'unique:events,short_url',
             ]);
@@ -195,14 +187,13 @@ class MyEventsController extends BaseMyEventsController
         ];
 
         //CUSTOM
-        if(Auth::user()->hasRole('admin'))
-               $params = $this->e_admin_commission($request, $params);
+        if (Auth::user()->hasRole('admin'))
+            $params = $this->e_admin_commission($request, $params);
         //CUSTOM
 
-        
+
         //featured
-        if(!empty($request->featured))
-        {
+        if (!empty($request->featured)) {
             $request->validate([
                 'featured'       => 'required|numeric|min:1|regex:^[1-9][0-9]*$^',
             ]);
@@ -211,46 +202,38 @@ class MyEventsController extends BaseMyEventsController
         }
 
         // Admin controls status via checkbox
-        if(Auth::user()->hasRole('admin'))
-        {
+        if (Auth::user()->hasRole('admin')) {
             $status             = (int) $request->status;
             $params["status"]   = $status ? 1 : 0;
-        }
-        else
-        {
+        } else {
             // organizer event status will be controlled by admin
             // - when organizer login
             // - when creating event
-            if(empty($request->event_id))
-            {
+            if (empty($request->event_id)) {
                 // - manual approval on
-                if(setting('multi-vendor.verify_publish'))
-                {
+                if (setting('multi-vendor.verify_publish')) {
                     $params["status"] = 0;
-                }
-                else
-                {
+                } else {
                     // - manual approval off
                     $params["status"] = 1;
                 }
             }
         }
-        
+
         // only at the time of event create
-        if(!$request->event_id)
-        {
+        if (!$request->event_id) {
             $params["user_id"]       = $this->organiser_id;
-            $params["item_sku"]      = (string) time().rand(1,98);
+            $params["item_sku"]      = (string) time() . rand(1, 98);
         }
-        
+
         $event    = $this->event->save_event($params, $request->event_id);
-        
-        if(empty($event))
-            return error(__('eventmie-pro::em.event_not_created'), Response::HTTP_BAD_REQUEST );
+
+        if (empty($event))
+            return error(__('eventmie-pro::em.event_not_created'), Response::HTTP_BAD_REQUEST);
 
         // ====================== Notification ====================== 
         //send notification after bookings
-        $msg[]                  = __('eventmie-pro::em.event').' - '.$event->title;
+        $msg[]                  = __('eventmie-pro::em.event') . ' - ' . $event->title;
         $extra_lines            = $msg;
 
         $mail['mail_subject']   = __('eventmie-pro::em.event_created');
@@ -264,7 +247,7 @@ class MyEventsController extends BaseMyEventsController
         /* CUSTOM */
 
         $notification_ids       = [1, $this->organiser_id];
-        
+
         $users = User::whereIn('id', $notification_ids)->get();
         try {
             // \Notification::locale(\App::getLocale())->send($users, new MailNotification($mail, $extra_lines));
@@ -274,20 +257,20 @@ class MyEventsController extends BaseMyEventsController
             // test
             // return view('email_templates.event', compact('mail'));
             //CUSTOM
-        } catch (\Throwable $th) {}
+        } catch (\Throwable $th) {
+        }
         // ====================== Notification ======================     
-        
-        
+
+
         // in case of create
-        if(empty($request->event_id))
-        {
+        if (empty($request->event_id)) {
             // set step complete
             $this->complete_step($event->is_publishable, 'detail', $event->id);
-            return response()->json(['status' => true, 'id' => $event->id, 'organiser_id' => $event->user_id , 'slug' => $event->slug ]);
-        }    
+            return response()->json(['status' => true, 'id' => $event->id, 'organiser_id' => $event->user_id, 'slug' => $event->slug]);
+        }
         // update event in case of edit
         $event      = $this->event->get_user_event($request->event_id, $this->organiser_id);
-        return response()->json(['status' => true, 'slug' => $event->slug]);    
+        return response()->json(['status' => true, 'slug' => $event->slug]);
     }
 
     // crate location of event
@@ -305,15 +288,14 @@ class MyEventsController extends BaseMyEventsController
             'city'              => 'max:256',
             'state'             => 'max:256',
             'zipcode'           => 'max:64',
-            'latitude'          => ['nullable','regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'],
-            'longitude'         => ['nullable','regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/'],
+            'latitude'          => ['nullable', 'regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'],
+            'longitude'         => ['nullable', 'regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/'],
             'online_location'   => 'nullable|string',
-            
+
         ]);
 
-        
-        if(empty($request->online_event))
-        {
+
+        if (empty($request->online_event)) {
             $request->validate([
                 'venues_ids'        => 'required'
             ]);
@@ -339,38 +321,35 @@ class MyEventsController extends BaseMyEventsController
         ];
 
         // only at the time of event create
-        if(!$request->event_id)
-        {
+        if (!$request->event_id) {
             $params["user_id"]       = $this->organiser_id;
         }
 
         // check this event id have login user or not
         $check_event    = $this->event->get_user_event($request->event_id, $this->organiser_id);
-        if(empty($check_event))
-        {
-            return error('access denied', Response::HTTP_BAD_REQUEST );
+        if (empty($check_event)) {
+            return error('access denied', Response::HTTP_BAD_REQUEST);
         }
 
         $location   = $this->event->save_event($params, $request->event_id);
-        if(empty($location))
-        {
-            return error('Database failure!', Response::HTTP_BAD_REQUEST );
+        if (empty($location)) {
+            return error('Database failure!', Response::HTTP_BAD_REQUEST);
         }
 
         // get update event
         $event    = $this->event->get_user_event($request->event_id, $this->organiser_id);
 
         $venues_ids = [];
-        if(!empty($request->venues_ids))
-            $venues_ids = explode(",",$request->venues_ids);
+        if (!empty($request->venues_ids))
+            $venues_ids = explode(",", $request->venues_ids);
 
         $event->venues()->sync($venues_ids);
-        
+
         // set step complete
         $this->complete_step($event->is_publishable, 'location', $request->event_id);
-        
+
         return response()->json(['status' => true, 'event' => $event]);
-    }  
+    }
 
     // crate media of event
     public function store_media(Request $request)
@@ -390,8 +369,7 @@ class MyEventsController extends BaseMyEventsController
         ]);
 
         // vedio link optional so if have vedio ling then validation apply
-        if(!empty($request->video_link) && (!empty($request->video_link[0])))
-        {
+        if (!empty($request->video_link) && (!empty($request->video_link[0]))) {
             $request->validate([
                 //CUSTOM
                 'video_link'      => 'required|array',
@@ -399,127 +377,116 @@ class MyEventsController extends BaseMyEventsController
                 //CUSTOM
             ]);
         }
-        
+
         $result              = [];
         // check this event id have login user or not
         $result    = $this->event->get_user_event($request->event_id, $this->organiser_id);
 
-        if(empty($result))
-        {
-            return error('access denied', Response::HTTP_BAD_REQUEST );
+        if (empty($result)) {
+            return error('access denied', Response::HTTP_BAD_REQUEST);
         }
-    
+
         // for multiple image
-        $path = 'events/'.Carbon::now()->format('FY').'/';
+        $path = 'events/' . Carbon::now()->format('FY') . '/';
 
         // for thumbnail
-        if(!empty($_REQUEST['thumbnail'])) 
-        { 
+        if (!empty($_REQUEST['thumbnail'])) {
             $params  = [
                 'image'  => $_REQUEST['thumbnail'],
                 'path'   => 'events',
                 'width'  => 512,
-                'height' => 512,  
+                'height' => 512,
             ];
             $thumbnail   = $this->upload_base64_image($params);
         }
 
-        if(!empty($_REQUEST['poster'])) 
-        {
+        if (!empty($_REQUEST['poster'])) {
             $params  = [
                 'image'  => $_REQUEST['poster'],
                 'path'   => 'events',
                 'width'  => 1920,
-                'height' => 1080,  
+                'height' => 1080,
             ];
 
             $poster   = $this->upload_base64_image($params);
         }
-    
+
         // for image
-        if($request->hasfile('images')) 
-        { 
+        if ($request->hasfile('images')) {
             // if have  image and database have images no images this event then apply this rule 
             $request->validate([
                 'images'        => 'required',
                 'images.*'      => 'mimes:jpeg,png,jpg,gif,svg',
-            ]); 
-        
+            ]);
+
             $files = $request->file('images');
-    
-            foreach($files as  $key => $file)
-            {
+
+            foreach ($files as  $key => $file) {
                 $extension       = $file->getClientOriginalExtension(); // getting image extension
-                $image[$key]     = time().rand(1,988).'.'.$extension;
-                $file->storeAs('public/'.$path, $image[$key]);
-                
-                $images[$key]    = $path.$image[$key];
+                $image[$key]     = time() . rand(1, 988) . '.' . $extension;
+                $file->storeAs('public/' . $path, $image[$key]);
+
+                $images[$key]    = $path . $image[$key];
             }
         }
 
-         //CUSTOM
+        //CUSTOM
         // for seatingchart_image
-        if($request->hasfile('seatingchart_image')) 
-        { 
+        if ($request->hasfile('seatingchart_image')) {
             // if have  image and database have images no images this event then apply this rule 
             $request->validate([
                 'seatingchart_image'      => 'required|mimes:jpeg,png,jpg,gif,svg',
-            ]); 
-        
-            $file = $request->file('seatingchart_image');
-    
-            
-            $extension              = $file->getClientOriginalExtension(); // getting image extension
-            $seatingchart_image     = time().rand(1,988).'.'.$extension;
-            $file->storeAs('public/'.$path, $seatingchart_image);
-            
-            $seatingchart_image     = $path.$seatingchart_image;
+            ]);
 
+            $file = $request->file('seatingchart_image');
+
+
+            $extension              = $file->getClientOriginalExtension(); // getting image extension
+            $seatingchart_image     = time() . rand(1, 988) . '.' . $extension;
+            $file->storeAs('public/' . $path, $seatingchart_image);
+
+            $seatingchart_image     = $path . $seatingchart_image;
         }
         //CUSTOM
-        
+
         //CUSTOM
         $video_link         = null;
-        if(!empty($request->video_link)) {
-            if(is_array($request->video_link)) {
-                if(!empty($request->video_link[0])) {
+        if (!empty($request->video_link)) {
+            if (is_array($request->video_link)) {
+                if (!empty($request->video_link[0])) {
                     $video_link         = json_encode($request->video_link);
                 }
             }
         }
         $params = [
-            "thumbnail"     => !empty($thumbnail) ? $path.$thumbnail : null ,
-            "poster"        => !empty($poster) ? $path.$poster : null,
+            "thumbnail"     => !empty($thumbnail) ? $path . $thumbnail : null,
+            "poster"        => !empty($poster) ? $path . $poster : null,
             "video_link"    => $video_link,
             "user_id"       => $this->organiser_id,
-        ];  
+        ];
 
         // if images uploaded
-        if(!empty($images))
-        {
-            if(!empty($result->images))
-            {
+        if (!empty($images)) {
+            if (!empty($result->images)) {
                 $exiting_images = json_decode($result->images, true);
 
                 $images = array_merge($images, $exiting_images);
             }
 
             $params["images"] = json_encode(array_values($images));
-
-        }    
+        }
 
         //CUSTOM
         // if seatingchart_image 
-        if(!empty($seatingchart_image))
-            $params["seatingchart_image"] = $seatingchart_image;    
-            
+        if (!empty($seatingchart_image))
+            $params["seatingchart_image"] = $seatingchart_image;
+
         //CUSTOM 
-        
+
         $status   = $this->event->save_event($params, $request->event_id);
 
-        if(empty($status))
-        {
-            return error('Database failure!', Response::HTTP_BAD_REQUEST );
+        if (empty($status)) {
+            return error('Database failure!', Response::HTTP_BAD_REQUEST);
         }
 
         // get media  related event_id who have created now
@@ -531,7 +498,7 @@ class MyEventsController extends BaseMyEventsController
         return response()->json(['images' => $images, 'status' => true]);
     }
 
-    
+
     /**
      *  my  event for particular organiser
      */
@@ -553,7 +520,7 @@ class MyEventsController extends BaseMyEventsController
             'organiser_id' => $this->organiser_id,
             'search'            => $request->search,
             'length'            => $request->length,
-            
+
             //CUSTOM
         ];
 
@@ -561,19 +528,18 @@ class MyEventsController extends BaseMyEventsController
 
         $myevents->makeVisible(['event_password']);
 
-        if(empty($myevents))
-            return error(__('eventmie-pro::em.event').' '.__('eventmie-pro::em.not_found'), Response::HTTP_BAD_REQUEST );
-        
+        if (empty($myevents))
+            return error(__('eventmie-pro::em.event') . ' ' . __('eventmie-pro::em.not_found'), Response::HTTP_BAD_REQUEST);
+
         //CUSTOM
         // add sub organizers    
         $myevents = $this->get_sub_organizers($myevents);
         //CUSTOM    
-        
-        
-        return response([
-            'myevents'=> $myevents->jsonSerialize(),
-        ], Response::HTTP_OK);
 
+
+        return response([
+            'myevents' => $myevents->jsonSerialize(),
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -582,8 +548,7 @@ class MyEventsController extends BaseMyEventsController
     public function get_organizers(Request $request)
     {
         //CUSTOM
-        if(!Auth::user()->hasRole('admin'))
-        {
+        if (!Auth::user()->hasRole('admin')) {
             $request->validate([
                 'search'        => 'required|string|max:256',
             ]);
@@ -593,15 +558,14 @@ class MyEventsController extends BaseMyEventsController
         $search     = $request->search;
         $organizers = $this->event->get_organizers($search);
 
-        if(empty($organizers))
-        {
-            return response()->json(['status' => false, 'organizers' => []]);    
+        if (empty($organizers)) {
+            return response()->json(['status' => false, 'organizers' => []]);
         }
 
-        foreach($organizers as $key => $val)
-            $organizers[$key]->name = $val->name.'  ( '.$val->email.' )';
-        
-        return response()->json(['status' => true, 'organizers' => $organizers ]);
+        foreach ($organizers as $key => $val)
+            $organizers[$key]->name = $val->name . '  ( ' . $val->email . ' )';
+
+        return response()->json(['status' => true, 'organizers' => $organizers]);
     }
 
     // check login user role
@@ -614,16 +578,14 @@ class MyEventsController extends BaseMyEventsController
         // if admin is creating event
         // then user Auth::id() as $organiser_id
         // and organiser id will be the id selected from Vue dropdown
-        if(Auth::user()->hasRole('admin'))
-        {
+        if (Auth::user()->hasRole('admin')) {
             $request->validate([
                 'organiser_id'       => 'required|numeric|min:1|regex:^[1-9][0-9]*$^',
             ]);
             $this->organiser_id = $request->organiser_id;
         }
-
     }
-    
+
     /**
      *  event admin commission
      */
@@ -632,9 +594,9 @@ class MyEventsController extends BaseMyEventsController
         // 1. validate data
         $request->validate([
             'e_admin_commission' => 'nullable|numeric',
-            
+
         ]);
-        
+
         $params['e_admin_commission'] = $request->e_admin_commission;
 
         return $params;
@@ -646,18 +608,17 @@ class MyEventsController extends BaseMyEventsController
 
     protected function setEventCurrency(Request $request)
     {
-        $this->currency = setting('regional.currency_default'); 
-        
+        $this->currency = setting('regional.currency_default');
+
         // get event by event_id
         $event          = $this->event->get_event(null, $request->event_id);
-        
+
         // if event not found then access denied
-        if(empty($event))
-            return ['status' => false, 'error' =>  __('eventmie-pro::em.event').' '.__('eventmie-pro::em.not_found')];
-        
-        if(!empty($event->currency))
+        if (empty($event))
+            return ['status' => false, 'error' =>  __('eventmie-pro::em.event') . ' ' . __('eventmie-pro::em.not_found')];
+
+        if (!empty($event->currency))
             $this->currency = $event->currency;
-            
     }
 
 
@@ -670,26 +631,26 @@ class MyEventsController extends BaseMyEventsController
         // 1. validate data
         $request->validate([
             'event_id'                => 'required|numeric|min:1|regex:^[1-9][0-9]*$^',
-            
+
         ]);
-        
-        $event_id  = (int) $request->event_id;  
-        
+
+        $event_id  = (int) $request->event_id;
+
         // convet json data into array
         $pos       =  json_decode($request->pos_ids, true);
         $scanner   =  json_decode($request->scanner_ids, true);
-        
+
         // for pos sub organizers
-        $this->prepare_sub_organizers($pos, $event_id, 4);        
-    
+        $this->prepare_sub_organizers($pos, $event_id, 4);
+
         // for scanner sub organizers
-        $this->prepare_sub_organizers($scanner, $event_id, 5);  
-        
+        $this->prepare_sub_organizers($scanner, $event_id, 5);
+
         // redirect 
         $url = route('eventmie.myevents_index');
-        $msg = __('eventmie-pro::em.add').' '.__('eventmie-pro::em.sub_organizer').' '.__('eventmie-pro::em.successful');
+        $msg = __('eventmie-pro::em.add') . ' ' . __('eventmie-pro::em.sub_organizer') . ' ' . __('eventmie-pro::em.successful');
         session()->flash('status', $msg);
-        
+
         return success_redirect($msg, $url);
     }
 
@@ -701,34 +662,31 @@ class MyEventsController extends BaseMyEventsController
     {
         // fetch all ids of all events
         $event_ids = $myevents->pluck('id');
-        
+
         // get sub organizers    
         $sub_organizers = \DB::table('user_roles')->select('user_roles.*', 'users.name', 'users.email')
-                            ->leftJoin('users', 'users.id', '=', 'user_roles.user_id')
-                            ->whereIn('event_id', $event_ids)
-                            ->where(function ($query) {
-                                $query->where('user_roles.role_id', '=', 4)
-                                    ->orWhere('user_roles.role_id', '=', 5)
-                                    ->orWhere('user_roles.role_id', '=', 6);
-                            })
-                            ->get();
+            ->leftJoin('users', 'users.id', '=', 'user_roles.user_id')
+            ->whereIn('event_id', $event_ids)
+            ->where(function ($query) {
+                $query->where('user_roles.role_id', '=', 4)
+                    ->orWhere('user_roles.role_id', '=', 5)
+                    ->orWhere('user_roles.role_id', '=', 6);
+            })
+            ->get();
 
         // group by event_id            
         $sub_organizers   = $sub_organizers->groupBy('event_id');
 
         //set sub organizer for relevant event_id
-        foreach($myevents as $key => $event)
-        {
+        foreach ($myevents as $key => $event) {
             $myevents[$key]['sub_organizers'] = [];
-            
+
             //match event_id then attach sub_organizers with group by role_id
-            if($sub_organizers->has($event->id))
+            if ($sub_organizers->has($event->id))
                 $myevents[$key]['sub_organizers'] = $sub_organizers[$event->id]->groupBy('role_id');
-        
-        };            
+        };
 
         return $myevents;
-
     }
 
     /**
@@ -740,16 +698,16 @@ class MyEventsController extends BaseMyEventsController
         $this->is_admin($request);
 
         $data = User::where(['organizer_id' => $this->organiser_id])
-                ->where(function ($query) {
-                    $query->where('role_id', '=', 4)
-                        ->orWhere('role_id', '=', 5)
-                        ->orWhere('role_id', '=', 6);
-                })->get();
+            ->where(function ($query) {
+                $query->where('role_id', '=', 4)
+                    ->orWhere('role_id', '=', 5)
+                    ->orWhere('role_id', '=', 6);
+            })->get();
 
         $sub_organizers = $data->groupBy('role_id');
-        
-                 // group by role_id
-        return response()->json(['status' => true,  'sub_organizers' => $sub_organizers ]);
+
+        // group by role_id
+        return response()->json(['status' => true,  'sub_organizers' => $sub_organizers]);
     }
 
     /**
@@ -760,34 +718,32 @@ class MyEventsController extends BaseMyEventsController
     {
         // delete before
         \DB::table('user_roles')->where(['event_id' => $event_id, 'role_id' => $role_id])->delete();
-        
+
         // if empty sub_organizers then return
-        if(empty($sub_organizers))
+        if (empty($sub_organizers))
             return true;
 
         $params = [];
-        
+
         //prepare data
-        foreach($sub_organizers as $key => $value)
-        {
+        foreach ($sub_organizers as $key => $value) {
             $params[$key]['user_id']  = $value;
             $params[$key]['role_id']  = $role_id;
-            $params[$key]['event_id'] = $event_id; 
+            $params[$key]['event_id'] = $event_id;
         }
 
         // If the record exists, it will be updated and If the record not exists, it will be inserted
-        foreach($params as $key => $value)
-        {
-             \DB::table('user_roles')
-                ->updateOrInsert([ 
-                    // check that the record exist or not base on user_id and event_id
-                    'event_id' => $value['event_id'],
-                    'user_id'  => $value['user_id']  
-                ],
+        foreach ($params as $key => $value) {
+            \DB::table('user_roles')
+                ->updateOrInsert(
+                    [
+                        // check that the record exist or not base on user_id and event_id
+                        'event_id' => $value['event_id'],
+                        'user_id'  => $value['user_id']
+                    ],
                     $value
-                );  
-        }            
-
+                );
+        }
     }
 
     /**
@@ -811,18 +767,18 @@ class MyEventsController extends BaseMyEventsController
 
         // create user
         $user = User::create([
-                    'name'          => $request->name,
-                    'email'         => $request->email,
-                    'password'      => \Hash::make($request->password),
-                    'role_id'       =>  $request->role,
-                    // 'organizer_id'  =>  $request->organizer_id,
-                    //CUSTOM
-                    'organizer_id'  =>  $this->organiser_id,
-                    //CUSTOM
-                ]);
+            'name'          => $request->name,
+            'email'         => $request->email,
+            'password'      => \Hash::make($request->password),
+            'role_id'       =>  $request->role,
+            // 'organizer_id'  =>  $request->organizer_id,
+            //CUSTOM
+            'organizer_id'  =>  $this->organiser_id,
+            //CUSTOM
+        ]);
 
-        
-         /* CUSTOM */
+
+        /* CUSTOM */
         // ====================== Notification ====================== 
         $mail['mail_subject']   = __('eventmie-pro::em.register_success');
         $mail['mail_message']   = __('eventmie-pro::em.get_tickets');
@@ -835,17 +791,17 @@ class MyEventsController extends BaseMyEventsController
             1, // admin
             $user->id, // new registered user
         ];
-        
+
         $users = User::whereIn('id', $notification_ids)->get();
-        
+
         \App\Jobs\RegistrationEmailJob::dispatch($mail, $users, 'register')->delay(now()->addSeconds(10));
         /* Send email verification link */
         $user->sendEmailVerificationNotification();
         /* Send email verification link */
         // ====================== Notification ======================     
-    
-        return response()->json(['status' => true]);        
-    } 
+
+        return response()->json(['status' => true]);
+    }
 
     /**
      *  delete seatchart image
@@ -856,20 +812,18 @@ class MyEventsController extends BaseMyEventsController
         // 1. validate data
         $request->validate([
             'event_id'                => 'required|numeric|min:1|regex:^[1-9][0-9]*$^',
-            
+
         ]);
 
         $params = [
-            'seatingchart_image' => null, 
+            'seatingchart_image' => null,
         ];
-        
+
         $status   = $this->event->save_event($params, $request->event_id);
 
-        if(empty($status))
-        {
-            return error('Database failure!', Response::HTTP_BAD_REQUEST );
+        if (empty($status)) {
+            return error('Database failure!', Response::HTTP_BAD_REQUEST);
         }
         return response()->json(['status' => true]);
     }
-    
 }

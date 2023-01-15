@@ -349,6 +349,7 @@ class MyEventsController extends Controller
     // crate media of event
     public function store_media(Request $request)
     {
+        logger($request->all());
         // if logged in user is admin
         $this->is_admin($request);
 
