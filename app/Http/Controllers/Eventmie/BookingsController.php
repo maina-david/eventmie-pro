@@ -240,7 +240,6 @@ class BookingsController extends BaseBookingsController
                     }
                     //CUSTOM
                 } else {
-                    logger($request->payment_method);
                     //if payment method is mpesa/tinypesa is_paid is 0 waiting for callback
                     if ($request->payment_method == 7) {
                         $booking[$key]['is_paid'] = 0;
@@ -516,7 +515,7 @@ class BookingsController extends BaseBookingsController
             unset($data['price']);
             $data['payment_status']     = $flag['message'];
             $data['payer_reference']    = $flag['payer_reference'];
-            $data['status']             = $flag['message'] == 'PENDING-CONFIRMATION' ? 0 : 1;
+            $data['status']             = ($payment_method == 7 ? 0 : 1);
             $data['created_at']         = Carbon::now();
             $data['updated_at']         = Carbon::now();
             // $data['currency_code']      = setting('regional.currency_default');
@@ -1849,44 +1848,3 @@ class BookingsController extends BaseBookingsController
 
         return $this->finish_checkout($flag);
     }
-
-    /**
-     * It handles the callback from Tinypesa.
-     *
-     * @param Request request The request object
-     *
-     * @return The response is a json object with the status of the transaction.
-     */
-    public function handleTinypesaCallback(Request $request)
-    {
-        logger(['TinyPesa Callback' => $request->all()]);
-
-        $result_code = $request['Body']['stkCallback']['ResultCode'];
-        $transaction_id = $request['Body']['stkCallback']['TinyPesaID'];
-
-        $transaction = Transaction::where('txn_id', $transaction_id)->first();
-
-        if ($transaction) {
-            if ($result_code == 0) {
-                $transaction->status = true;
-                $transaction->payment_status = 'SUCCESS';
-                $transaction->save();
-
-                $booking = Booking::where('transaction_id', $transaction->id)->first();
-
-                if ($booking) {
-                    $booking->is_paid = true;
-                    $booking->save();
-                }
-
-                return response()->json('success', 200);
-            } else {
-                $transaction->status = false;
-                $transaction->payment_status = 'FAILED';
-                $transaction->save();
-                return response()->json('success', 200);
-            }
-        }
- 
-   }
-}

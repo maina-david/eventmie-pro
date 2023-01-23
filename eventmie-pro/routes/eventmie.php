@@ -189,9 +189,6 @@ Route::group([
         // Paypal Checkout
         Route::match(['get', 'post'], '/paypal/callback', "$controller@paypal_callback")->name('bookings_paypal_callback');
 
-        // TinyPesa
-        Route::match(['get', 'post'], '/tinypesa/callback', "$controller@tinypesa_callback")->name('bookings_tinypesa_callback');
-
         // Redirect back to event
         Route::get('/login-first', "$controller@login_first")->name('login_first');
         Route::get('/signup-first', "$controller@signup_first")->name('signup_first');

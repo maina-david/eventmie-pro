@@ -367,6 +367,3 @@ Route::group([
     Route::get('/paystack/payment/callback', '\App\Http\Controllers\Eventmie\BookingsController@handleGatewayCallback');
     //paystack routes end
 });
-//Tinypesa Callback
-Route::match(['get', 'post'], '/tinypesa/payment/callback', '\App\Http\Controllers\Eventmie\BookingsController@handleTinypesaCallback')->name('tinypesa_callback');
-//Tinypesa Callback
