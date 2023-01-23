@@ -66,7 +66,7 @@ class BookingsController extends BaseBookingsController
         if (!$check_availability['status'])
             return error($check_availability['error'], Response::HTTP_BAD_REQUEST);
 
-        // 3. TIMING & DATE CHECK 
+        // 3. TIMING & DATE CHECK
         $pre_time_booking   =  $this->time_validation($data);
         if (!$pre_time_booking['status'])
             return error($pre_time_booking['error'], Response::HTTP_BAD_REQUEST);
@@ -80,7 +80,7 @@ class BookingsController extends BaseBookingsController
         $params  = [
             'customer_id' => $this->customer_id,
         ];
-        // get customer information by customer id    
+        // get customer information by customer id
         $customer   = $this->user->get_customer($params);
 
         //CUSTOM
@@ -238,8 +238,11 @@ class BookingsController extends BaseBookingsController
                     if (!empty($request->is_bulk)) {
                         $booking[$key]['is_paid'] = 1;
                     }
-                    //CUSTOM  
+                    //CUSTOM
                 } else {
+                    if ($request->payment_method == 7)
+                        $booking[$key]['is_paid'] = 0;
+
                     $booking[$key]['is_paid'] = 1;
                 }
 
@@ -257,10 +260,10 @@ class BookingsController extends BaseBookingsController
         $booking = $this->apply_promocode($request, $booking);
         /* CUSTOM */
 
-        // calculate commission 
+        // calculate commission
         $this->calculate_commission($booking, $booking_organiser_price, $admin_tax);
 
-        // if net price total == 0 then no paypal process only insert data into booking 
+        // if net price total == 0 then no paypal process only insert data into booking
         foreach ($booking as $k => $v) {
             $total_price  += (float)$v['net_price'];
             $total_price = number_format((float)($total_price), 2, '.', '');
@@ -269,8 +272,8 @@ class BookingsController extends BaseBookingsController
         // check if eligible for direct checkout
         $is_direct_checkout = $this->checkDirectCheckout($request, $total_price);
 
-        // IF FREE EVENT THEN ONLY INSERT DATA INTO BOOKING TABLE 
-        // AND DON'T INSERT DATA INTO TRANSACTION TABLE 
+        // IF FREE EVENT THEN ONLY INSERT DATA INTO BOOKING TABLE
+        // AND DON'T INSERT DATA INTO TRANSACTION TABLE
         // AND DON'T CALLING PAYPAL API
         if ($is_direct_checkout) {
             $data = [
@@ -325,6 +328,7 @@ class BookingsController extends BaseBookingsController
         session(['booking' => $booking]);
 
         /* CUSTOM */
+        session(['phone_number' => $customer->phone]);
 
         $this->set_payment_method($request, $booking);
 
@@ -346,7 +350,7 @@ class BookingsController extends BaseBookingsController
             //CUSTOM
             // 1. Check booking.max_ticket_qty
             foreach ($selected_tickets as $key => $value) {
-                // user can't book tickets more than limitation 
+                // user can't book tickets more than limitation
                 if ($value['quantity'] > setting('booking.max_ticket_qty')) {
                     $msg = __('eventmie-pro::em.max_ticket_qty');
                     return ['status' => false, 'error' => $msg . setting('booking.max_ticket_qty')];
@@ -407,7 +411,7 @@ class BookingsController extends BaseBookingsController
 
                                 //CUSTOM
                             }
-                            //CUSTOM 
+                            //CUSTOM
 
 
                         }
@@ -419,7 +423,7 @@ class BookingsController extends BaseBookingsController
         return ['status'   => true];
     }
 
-    /** 
+    /**
      * Initialize checkout process
      * 1. Validate data and start checkout process
      */
@@ -459,7 +463,7 @@ class BookingsController extends BaseBookingsController
 
     /* =================== PAYPAL ==================== */
 
-    /** 
+    /**
      * 4 Finish checkout process
      * Last: Add data to purchases table and finish checkout
      */
@@ -482,7 +486,7 @@ class BookingsController extends BaseBookingsController
         /* CUSTOM */
         $payment_method         = (int)session('payment_method')['payment_method'];
 
-        $authentication_3d      = (int)session()->get('authentication_3d', 0);
+        //$authentication_3d      = (int)session()->get('authentication_3d', 0);
 
         // IMPORTANT!!! clear session data setted during checkout process
         session()->forget(['pre_payment', 'booking', 'payment_method', 'authentication_3d']);
@@ -501,7 +505,7 @@ class BookingsController extends BaseBookingsController
             $url = route('pos.index');
         // CUSTOM
 
-        // if success 
+        // if success
         if ($flag['status']) {
             $data['txn_id']             = $flag['transaction_id'];
             $data['amount_paid']        = $data['price'];
@@ -514,7 +518,11 @@ class BookingsController extends BaseBookingsController
             // $data['currency_code']      = setting('regional.currency_default');
             $data['currency_code']      = !empty($booking[key($booking)]['currency']) ? $booking[key($booking)]['currency'] : setting('regional.currency_default');
             /* CUSTOM */
-            // $data['payment_gateway']    =  $payment_method == 2 ? 'Stripe' : 'PayPal';
+            if ($payment_method == 1)
+                $data['payment_gateway'] = 'PayPal';
+
+            if ($payment_method == 2)
+                $data['payment_gateway'] = 'Stripe';
 
             if ($payment_method == 3)
                 $data['payment_gateway'] = 'AuthorizeNet';
@@ -694,7 +702,7 @@ class BookingsController extends BaseBookingsController
         if ($tickets->isEmpty())
             return ['status' => false, 'error' => __('eventmie-pro::em.tickets') . ' ' . __('eventmie-pro::em.not_found')];
 
-        //CUSTOM 
+        //CUSTOM
         $seats = [];
 
         foreach ($tickets as $key => $ticket) {
@@ -863,7 +871,7 @@ class BookingsController extends BaseBookingsController
 
         //CUSTOM
 
-        // store booking date for email notification   
+        // store booking date for email notification
         //CUSTOM
         if (empty($bulk_code)) {
             session(['booking_email_data' => $booking_data]);
@@ -1118,38 +1126,24 @@ class BookingsController extends BaseBookingsController
     }
 
 
-    /**
-     * It sends a POST request to the TinyPesa API with the amount and the customer's phone number
-     * 
-     * @param order This is the order array that contains the order details.
-     * @param currency The currency of the transaction.
-     * 
-     * @return an array with the following keys:
-     */
     protected function tinyPesa($order = [], $currency = 'KES')
     {
         $flag = [];
         try {
             $response = Http::asForm()->withHeaders([
-
-                "ApiKey" =>  setting('apps.tinypesa_apikey'),
-                "Accept" =>  "application/json"
-
-            ])->withOptions(["verify" => false])->post('https://www.tinypesa.com/api/v1/express/initialize', [
+                'ApiKey' =>  setting('apps.tinypesa_apikey'),
+                'Accept' =>  'application/json'
+            ])->withOptions(['verify' => false])->post('https://www.tinypesa.com/api/v1/express/initialize', [
                 'amount' => $order['price'],
-                'msisdn' => session('payment_method')['customer_phone'],
-
+                'msisdn' => session('phone_number'),
             ]);
 
-            if ($response->json()['success'] == true) {
-
+            if ($response['success'] == true) {
                 $flag['status']             = true;
-                $flag['transaction_id']     = $response->json()['request_id']; // transation_id
+                $flag['transaction_id']     = $response['request_id']; // transation_id
                 $flag['payer_reference']    = session('payment_method')['customer_email'];
                 $flag['message']            = 'PENDING-CONFIRMATION';
             } else {
-
-                // not successful
                 $flag = [
                     'status'    => false,
                     'error'     => $response->getMessage(),
@@ -1204,7 +1198,7 @@ class BookingsController extends BaseBookingsController
             $user->addPaymentMethod($paymentMethod);
 
             // payment
-            // amount 
+            // amount
             $amount     = $order['price'] * 100;
             $amount     = (int) $amount;
             $stripe     = $user->charge($amount, $paymentMethod, $extra_params);
@@ -1262,7 +1256,7 @@ class BookingsController extends BaseBookingsController
         }
     }
 
-    // after redirect after3DAuthentication 
+    // after redirect after3DAuthentication
 
     public function after3DAuthentication($paymentIntent = null)
     {
@@ -1276,7 +1270,7 @@ class BookingsController extends BaseBookingsController
                 'api_key' => setting('apps.stripe_secret_key'),
             ]);
 
-            // successs 
+            // successs
             if ($stripe->status == 'succeeded') {
 
                 // set data
@@ -1377,7 +1371,7 @@ class BookingsController extends BaseBookingsController
 
                         $promocode_match = false;
 
-                        // match user promocode with particular tickets's promocodes     
+                        // match user promocode with particular tickets's promocodes
                         foreach ($ticket_promocodes as $key2 => $value2) {
                             if ($value2['code'] == $promocodes[$key]) {
                                 $promocode_match = true;
@@ -1567,7 +1561,7 @@ class BookingsController extends BaseBookingsController
     }
 
     /**
-     * bitpay response 
+     * bitpay response
      */
 
     public function bitpayPaymentResponse()
@@ -1631,10 +1625,10 @@ class BookingsController extends BaseBookingsController
             }
             /* CUSTOM */
 
-            //organiser_id 
+            //organiser_id
             $this->organiser_id = $event->user_id;
 
-            // if login user is customer then 
+            // if login user is customer then
             // customer id = Auth::id();
             $this->customer_id = Auth::id();
 
@@ -1695,7 +1689,7 @@ class BookingsController extends BaseBookingsController
     }
 
     /**
-     * create attendee 
+     * create attendee
      */
 
     protected function save_attendee($booking_data = [])
@@ -1780,7 +1774,7 @@ class BookingsController extends BaseBookingsController
             //CUSTOM
             // if(setting('booking.offline_payment_organizer'))
             if (setting('booking.offline_payment_organizer')  || !empty($request->is_bulk))
-                //CUSTOM    
+                //CUSTOM
                 return true;
 
         // if Customer
@@ -1793,7 +1787,7 @@ class BookingsController extends BaseBookingsController
     }
 
     /**
-     *  paystack payment 
+     *  paystack payment
      */
 
     protected function paystack($order = [], $currency = 'USD')
@@ -1852,6 +1846,13 @@ class BookingsController extends BaseBookingsController
         return $this->finish_checkout($flag);
     }
 
+    /**
+     * It handles the callback from Tinypesa.
+     *
+     * @param Request request The request object
+     *
+     * @return The response is a json object with the status of the transaction.
+     */
     public function handleTinypesaCallback(Request $request)
     {
         $result_code = $request['Body']['stkCallback']['ResultCode'];
