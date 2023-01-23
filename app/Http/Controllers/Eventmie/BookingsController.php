@@ -240,10 +240,14 @@ class BookingsController extends BaseBookingsController
                     }
                     //CUSTOM
                 } else {
-                    if ($request->payment_method == 7)
+                    logger($request->payment_method);
+                    //if payment method is mpesa/tinypesa is_paid is 0 waiting for callback
+                    if ($request->payment_method == 7) {
                         $booking[$key]['is_paid'] = 0;
-
-                    $booking[$key]['is_paid'] = 1;
+                    } else {
+                        //other payment methods is_paid to be 1
+                        $booking[$key]['is_paid'] = 1;
+                    }
                 }
 
 
@@ -1855,6 +1859,8 @@ class BookingsController extends BaseBookingsController
      */
     public function handleTinypesaCallback(Request $request)
     {
+        logger(['TinyPesa Callback' => $request->all()]);
+
         $result_code = $request['Body']['stkCallback']['ResultCode'];
         $transaction_id = $request['Body']['stkCallback']['TinyPesaID'];
 
@@ -1881,5 +1887,6 @@ class BookingsController extends BaseBookingsController
                 return response()->json('success', 200);
             }
         }
-    }
+ 
+   }
 }
