@@ -19,7 +19,6 @@ use Classiebit\Eventmie\Models\Transaction;
 */
 //Tinypesa Callback
 Route::match(['get', 'post'], '/tinypesa/payment/callback', function (Request $request) {
-    logger(['TinyPesa Callback' => $request->all()]);
     if (isset($request['Body']['stkCallback']['ResultCode'])) {
         $result_code = $request['Body']['stkCallback']['ResultCode'];
         $transaction_id = $request['Body']['stkCallback']['TinyPesaID'];
@@ -38,6 +37,13 @@ Route::match(['get', 'post'], '/tinypesa/payment/callback', function (Request $r
                     $booking->is_paid = true;
                     $booking->save();
                 }
+                $request = Request::create(route('eventmie.send_email'), 'GET');
+
+                $response = app()->handle($request);
+
+                logger(['Booking' => session('booking_email_data')]);
+
+                logger(['Get response' => $response]);
 
                 return response()->json(['success' => true, 'message' => 'Payment Processed!'], 200);
             } else {

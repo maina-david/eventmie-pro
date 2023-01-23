@@ -874,11 +874,10 @@ class BookingsController extends BaseBookingsController
 
         //CUSTOM
 
-        // store booking date for email notification
+        // store booking data for email notification
         //CUSTOM
         if (empty($bulk_code)) {
             session(['booking_email_data' => $booking_data]);
-            //CUSTOM
         }
         //CUSTOM
 
@@ -1848,3 +1847,4 @@ class BookingsController extends BaseBookingsController
 
         return $this->finish_checkout($flag);
     }
+}
