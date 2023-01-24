@@ -42,8 +42,13 @@ class SendEmailController extends BaseSendEmailController
         if (empty($booking_data))
             return response()
                 ->json(['status' => 0]);
+        if ($booking_data[key($booking_data)]['is_paid'] == 0) {
 
-        if ($booking_data[key($booking_data)]['is_paid'] == 1) {
+            logger($booking_data);
+
+            return response()
+                ->json(['status' => 0]);
+        } else {
             // get online event info
             $event                  = $this->event->get_event(NULL, $booking_data[key($booking_data)]['event_id']);
             $mail['is_online']      = FALSE;

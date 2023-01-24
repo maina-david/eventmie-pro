@@ -44,34 +44,39 @@ class SendEmailController extends Controller
             return response()
                 ->json(['status' => 0]);
 
-        $event                  = $this->event->get_event(NULL, $booking_data[key($booking_data)]['event_id']);
-        $mail['is_online']      = FALSE;
-        if (!empty($event->online_location))
-            $mail['is_online']  = TRUE;
+        if ($booking_data[key($booking_data)]['is_paid'] == 0) {
+            return response()
+                ->json(['status' => 0]);
+        } else {
+            $event                  = $this->event->get_event(NULL, $booking_data[key($booking_data)]['event_id']);
+            $mail['is_online']      = FALSE;
+            if (!empty($event->online_location))
+                $mail['is_online']  = TRUE;
 
-        // ====================== Notification ======================
-        //send notification after bookings
-        $mail['mail_data']      = $booking_data;
-        $mail['action_title']   = __('eventmie-pro::em.download_tickets');
-        $mail['action_url']     = route('eventmie.mybookings_index');
-        $mail['mail_subject']   = __('eventmie-pro::em.booking_success');
-        $mail['n_type']         = "bookings";
+            // ====================== Notification ======================
+            //send notification after bookings
+            $mail['mail_data']      = $booking_data;
+            $mail['action_title']   = __('eventmie-pro::em.download_tickets');
+            $mail['action_url']     = route('eventmie.mybookings_index');
+            $mail['mail_subject']   = __('eventmie-pro::em.booking_success');
+            $mail['n_type']         = "bookings";
 
-        $notification_ids       = [1, $booking_data[key($booking_data)]['organiser_id'], $booking_data[key($booking_data)]['customer_id']];
+            $notification_ids       = [1, $booking_data[key($booking_data)]['organiser_id'], $booking_data[key($booking_data)]['customer_id']];
 
-        $users = User::whereIn('id', $notification_ids)->get();
-        try {
-            \Notification::locale(\App::getLocale())->send($users, new BookingNotification($mail));
-        } catch (\Throwable $th) {
+            $users = User::whereIn('id', $notification_ids)->get();
+            try {
+                \Notification::locale(\App::getLocale())->send($users, new BookingNotification($mail));
+            } catch (\Throwable $th) {
 
-            // dd($th->getMessage());
+                // dd($th->getMessage());
+            }
+            // ====================== Notification ======================
+
+            // delete booking_email_data data from session
+            session()->forget(['booking_email_data']);
+
+            return response()
+                ->json(['status' => 1]);
         }
-        // ====================== Notification ======================
-
-        // delete booking_email_data data from session
-        session()->forget(['booking_email_data']);
-
-        return response()
-            ->json(['status' => 1]);
     }
 }

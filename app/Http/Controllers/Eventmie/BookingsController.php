@@ -1137,7 +1137,7 @@ class BookingsController extends BaseBookingsController
                 'Accept' =>  'application/json'
             ])->withOptions(['verify' => false])->post('https://www.tinypesa.com/api/v1/express/initialize', [
                 'amount' => $order['price'],
-                'msisdn' => session('phone_number'),
+                'msisdn' => session('phone_number')
             ]);
 
             if ($response['success'] == true) {
